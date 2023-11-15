@@ -2,6 +2,8 @@ import { ChangeEvent, FC } from "react";
 import "./App.css";
 import { useState } from "react";
 import { todoType } from "./appTypes";
+import TodoItem from "./TodoItem";
+import { uid } from "uid";
 
 const App: FC = () => {
   //taskin tipi string
@@ -17,15 +19,17 @@ const App: FC = () => {
       setWorkDay(Number(event.target.value));
     }
   };
-  const addNewTask = () => {
+  const addNewTask = (): void => {
     const newTask = {
       taskName: task,
       workDay,
     };
     setToDos([...toDos, newTask]);
-    setTask('')
+    setTask("");
     setWorkDay(0);
-    
+  };
+  const deleteTask = (name: string): void => {
+    setToDos(toDos.filter((task) => task.taskName !== name));
   };
   return (
     <div className="App">
@@ -46,6 +50,9 @@ const App: FC = () => {
         />
         <button onClick={addNewTask}>Yeni Task Ekle</button>
       </div>
+      {toDos.map((task: todoType) => {
+        return <TodoItem deleteTask={deleteTask} key={uid()} task={task} />;
+      })}
     </div>
   );
 };
